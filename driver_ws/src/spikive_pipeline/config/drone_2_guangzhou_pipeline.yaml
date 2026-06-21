@@ -22,23 +22,35 @@ pgo:
   use_loop: true
   use_gps: false
   use_key_frame: true
-  # Garage scenes need denser keyframes; otherwise STD groups never exceed skip_near_num.
-  key_frame_len_thre: 0.1
-  key_frame_ang_thre: 0.05
+  # 地下车库推荐值：关键帧不要过密。0.1/0.05 在 drone_2_gld_indexed 上会引入米级Z分层。
+  # 当前0.3/0.1配合严格STD门限，测试得到PGO Z p95约2.1cm，起终点距离保持约0.33m。
+  key_frame_len_thre: 0.3
+  key_frame_ang_thre: 0.1
   std:
-    skip_near_num: 20
-    candidate_num: 30
-    sub_frame_num: 10
-    center_dis_threshold: 80.0
-    rough_dis_threshold: 0.02
-    vertex_diff_threshold: 0.7
-    icp_threshold: 0.35
-    normal_threshold: 0.2
-    dis_threshold: 0.5
+    # 跳过近邻STD组，避免车库连续相似柱/墙被当作回环。
+    skip_near_num: 25
+    # 候选数量不宜过大；重复结构里候选越多，越容易选中错误闭环。
+    candidate_num: 15
+    # 每15个PGO关键帧聚成一个STD组，增大局部覆盖范围，提升全局回环辨识度。
+    sub_frame_num: 15
+    # 限制候选中心距离，抑制跨区域/跨通道的误回环。
+    center_dis_threshold: 30.0
+    # STD边长粗筛阈值；保持严格，降低相似小结构误配。
+    rough_dis_threshold: 0.01
+    # STD顶点附加信息差异阈值；越小越严格。
+    vertex_diff_threshold: 0.45
+    # 回环几何验证通过阈值；越大越严格。地下车库优先少而准。
+    icp_threshold: 0.55
+    # 平面法向与点面距离门限；调小后能减少错误回环，但可能牺牲部分真回环。
+    normal_threshold: 0.15
+    dis_threshold: 0.25
   run_native: true
 
 hba:
   run_native: true
+  # YAML-only模式下，HBA当前只支持 total_layer_num/thread_num。
+  # downsample_size/voxel_size/eigen_ratio/reject_ratio/max_iter 仍在源码中硬编码，未在本次改动中修改。
+  # 在 drone_2_gld_indexed 上，HBA 3层会比PGO重新引入约0.20m Z p95且MME变差；最终地图优先使用PGO输出。
   total_layer_num: 3
   thread_num: 4
 
