@@ -1,0 +1,42 @@
+services:
+  ros-noetic:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/ubuntu:20.04}
+        UBUNTU_APT_MIRROR: ${UBUNTU_APT_MIRROR:-http://mirrors.tuna.tsinghua.edu.cn/ubuntu}
+        ROS_APT_MIRROR: ${ROS_APT_MIRROR:-http://mirrors.tuna.tsinghua.edu.cn/ros/ubuntu}
+        ROS_KEY_URL: ${ROS_KEY_URL:-https://cdn.jsdelivr.net/gh/ros/rosdistro@master/ros.asc}
+        ROSDEP_SOURCE_URL: ${ROSDEP_SOURCE_URL:-https://mirrors.tuna.tsinghua.edu.cn/rosdistro/rosdep/sources.list.d/20-default.list}
+        ROSDISTRO_MIRROR: ${ROSDISTRO_MIRROR:-https://mirrors.tuna.tsinghua.edu.cn/rosdistro}
+        INSTALL_GTSAM_FROM_SOURCE: ${INSTALL_GTSAM_FROM_SOURCE:-0}
+        GTSAM_VERSION: ${GTSAM_VERSION:-4.1.1}
+        USER_UID: ${UID:-1000}
+        USER_GID: ${GID:-1000}
+        USERNAME: ros
+    image: pointcloud-pgoba:ros-noetic
+    container_name: pointcloud-pgoba-ros
+    network_mode: host
+    ipc: host
+    privileged: ${DOCKER_PRIVILEGED:-false}
+    stdin_open: true
+    tty: true
+    environment:
+      DISPLAY: ${DISPLAY:-}
+      QT_X11_NO_MITSHM: "1"
+      NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES:-all}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES:-all}
+      ROS_MASTER_URI: ${ROS_MASTER_URI:-http://localhost:11311}
+      ROS_HOSTNAME: ${ROS_HOSTNAME:-localhost}
+      POINTCLOUD_PGOBA_ROOT: ${PWD}
+    volumes:
+      - ./:/workspace/project:rw
+      - ./:${PWD}:rw
+      - catkin_ws:/workspace/catkin_ws
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    working_dir: /workspace/catkin_ws
+
+volumes:
+  catkin_ws:
+    name: pointcloud-pgoba-catkin-ws

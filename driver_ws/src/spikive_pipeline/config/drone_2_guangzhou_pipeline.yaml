@@ -1,0 +1,62 @@
+reference:
+  pointcloud_process_config: config/pointcloud_process_config.yaml
+
+input:
+  bag_path: /home/colman/Project/PointCloud-PGOBA/input/drone_2_gld_indexed.bag
+  cloud_topic: /cloud_registered_body
+  odom_topic: /drone_2_visual_slam/odom
+
+output:
+  root: /home/colman/Project/PointCloud-PGOBA/output/drone_2_gld_indexed
+  world_frame_id: world
+  stitch_pcd: true
+  # 0 keeps the stitched maps dense. Set 0.05/0.1 to voxel downsample.
+  map_resolution: 0.05
+  write_stage_local_clouds: false
+  write_optimized_frame_clouds: true
+
+pgo:
+  input_cloud_topic: /cloud_registered_body
+  input_odom_topic: /Odometry_pipeline_input
+  save_name: pgo
+  use_loop: true
+  use_gps: false
+  use_key_frame: true
+  # Garage scenes need denser keyframes; otherwise STD groups never exceed skip_near_num.
+  key_frame_len_thre: 0.1
+  key_frame_ang_thre: 0.05
+  std:
+    skip_near_num: 20
+    candidate_num: 30
+    sub_frame_num: 10
+    center_dis_threshold: 80.0
+    rough_dis_threshold: 0.02
+    vertex_diff_threshold: 0.7
+    icp_threshold: 0.35
+    normal_threshold: 0.2
+    dis_threshold: 0.5
+  run_native: true
+
+hba:
+  run_native: true
+  total_layer_num: 3
+  thread_num: 4
+
+runtime:
+  gtsam_lib_dir: /workspace/catkin_ws/third_party/install/lib
+  pgo_gtsam_lib_dir: /workspace/catkin_ws/third_party/gtsam-4.0.2/lib
+  hba_gtsam_lib_dir: /workspace/catkin_ws/third_party/gtsam-4.1/lib
+
+evaluation:
+  mme_thr_num: 4
+
+extrinsic:
+  apply: true
+  # Apply R/T to poses, not to clouds. right_multiply gives:
+  #   Pose_new * point_local == Pose_old * (R/T * point_local)
+  pose_mode: right_multiply
+  R:
+    - [0.9171, 0.0, 0.3987]
+    - [0.0, 1.0, 0.0]
+    - [-0.3987, 0.0, 0.9171]
+  T: [0.065, 0.0, 0.071]

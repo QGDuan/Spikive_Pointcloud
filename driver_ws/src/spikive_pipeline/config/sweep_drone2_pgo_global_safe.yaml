@@ -1,0 +1,59 @@
+reference:
+  pointcloud_process_config: config/pointcloud_process_config.yaml
+
+input:
+  bag_path: /home/colman/Project/PointCloud-PGOBA/input/drone_2_gld_indexed.bag
+  cloud_topic: /cloud_registered_body
+  odom_topic: /drone_2_visual_slam/odom
+
+output:
+  root: /home/colman/Project/PointCloud-PGOBA/output/param_sweep/drone_2_gld_indexed/pgo_global_safe
+  world_frame_id: world
+  stitch_pcd: true
+  map_resolution: 0.05
+  write_stage_local_clouds: false
+  write_optimized_frame_clouds: true
+
+pgo:
+  input_cloud_topic: /cloud_registered_body
+  input_odom_topic: /Odometry_pipeline_input
+  save_name: pgo
+  use_loop: true
+  use_gps: false
+  use_key_frame: true
+  # 全局稳健组：降低关键帧密度，让STD组覆盖更大空间，优先减少重复车库误回环。
+  key_frame_len_thre: 0.3
+  key_frame_ang_thre: 0.1
+  std:
+    skip_near_num: 25
+    candidate_num: 15
+    sub_frame_num: 15
+    center_dis_threshold: 30.0
+    rough_dis_threshold: 0.01
+    vertex_diff_threshold: 0.45
+    icp_threshold: 0.55
+    normal_threshold: 0.15
+    dis_threshold: 0.25
+  run_native: true
+
+hba:
+  run_native: true
+  total_layer_num: 4
+  thread_num: 4
+
+runtime:
+  gtsam_lib_dir: /workspace/catkin_ws/third_party/install/lib
+  pgo_gtsam_lib_dir: /workspace/catkin_ws/third_party/gtsam-4.0.2/lib
+  hba_gtsam_lib_dir: /workspace/catkin_ws/third_party/gtsam-4.1/lib
+
+evaluation:
+  mme_thr_num: 4
+
+extrinsic:
+  apply: true
+  pose_mode: right_multiply
+  R:
+    - [0.9171, 0.0, 0.3987]
+    - [0.0, 1.0, 0.0]
+    - [-0.3987, 0.0, 0.9171]
+  T: [0.065, 0.0, 0.071]

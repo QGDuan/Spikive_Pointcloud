@@ -1,0 +1,32 @@
+# Runtime data and generated results
+/input/
+/output/
+/backups/
+
+# ROS/catkin generated files
+/build/
+/devel/
+/install/
+/.catkin_tools/
+*.bag
+*.db3
+*.pcd
+
+# Third-party source archives and expanded dependency trees
+/lib/*.zip
+/lib/gtsam-4.0.2/
+/lib/gtsam-4.1.0/
+/lib/ceres-solver-2.1.0/
+/lib/geographiclib-main/
+/lib/Livox-SDK2-master/
+
+# Python/cache artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+.DS_Store

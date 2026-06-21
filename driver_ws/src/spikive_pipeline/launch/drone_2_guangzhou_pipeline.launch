@@ -1,0 +1,27 @@
+<launch>
+  <arg name="config" default="$(find spikive_pipeline)/config/drone_2_guangzhou_pipeline.yaml" />
+  <arg name="bag_path" default="" />
+  <arg name="output_root" default="" />
+  <arg name="world_frame_id" default="" />
+  <arg name="stitch_pcd" default="" />
+  <arg name="map_resolution" default="" />
+  <arg name="pgo_use_key_frame" default="" />
+  <arg name="pgo_key_frame_len_thre" default="" />
+  <arg name="pgo_key_frame_ang_thre" default="" />
+
+  <node pkg="spikive_pipeline"
+        type="drone_2_guangzhou_pipeline.py"
+        name="drone_2_guangzhou_pipeline"
+        output="screen"
+        clear_params="true">
+    <param name="config" value="$(arg config)" />
+    <param name="bag_path" value="$(arg bag_path)" />
+    <param name="output_root" value="$(arg output_root)" />
+    <param name="world_frame_id" value="$(arg world_frame_id)" />
+    <param name="stitch_pcd" value="$(arg stitch_pcd)" />
+    <param name="map_resolution" value="$(arg map_resolution)" />
+    <param name="pgo_use_key_frame" value="$(arg pgo_use_key_frame)" />
+    <param name="pgo_key_frame_len_thre" value="$(arg pgo_key_frame_len_thre)" />
+    <param name="pgo_key_frame_ang_thre" value="$(arg pgo_key_frame_ang_thre)" />
+  </node>
+</launch>

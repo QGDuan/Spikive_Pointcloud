@@ -1,0 +1,28 @@
+bag: input/drone_2_gld_indexed.bag
+
+topics:
+  cloud: /cloud_registered_body
+  odom: /drone_2_visual_slam/odom
+
+output:
+  pcd: output/input/drone_2_map.pcd
+  frame_id: world
+
+flight_controller_extrinsic:
+  apply: true
+  # From Spikive-SLAM/config/config.yaml top-level R/T.
+  # Used by slam_to_uav_transform before /Odometry_trans and
+  # /drone_2_visual_slam/odom are consumed with /cloud_registered_body.
+  R:
+    - [0.9171, 0.0, 0.3987]
+    - [0.0, 1.0, 0.0]
+    - [-0.3987, 0.0, 0.9171]
+  T: [0.065, 0.0, 0.071]
+
+processing:
+  voxel_size: 0.1
+  downsample_each_cloud: false
+  max_odom_dt: 0.05
+  min_range: 0.0
+  max_range: .inf
+  no_progress: false
