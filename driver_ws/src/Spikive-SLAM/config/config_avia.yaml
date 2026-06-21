@@ -1,0 +1,17 @@
+avia_common:
+    lid_topic:  "/livox/lidar"
+
+avia_preprocess:
+    lidar_type: 1      
+    scan_line: 6
+    blind: 1
+    feature_extract_enable: true
+    point_filter_num: 3
+
+avia_mapping: #相对于主雷达点云中心
+    # extrinsic_T: [ 0.05233, 0.0, -0.08832 ] #苏州园区
+    extrinsic_T: [ 0.05783, 0.0, -0.06532 ] #柳州厂房
+    extrinsic_R: [ 1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1]
+   

@@ -1,0 +1,44 @@
+# lsdc loop
+loop:
+    update_graph_freq: 0.5  #更新地图频率(若出现[Pgo Update Time]警告，可适当调小)
+    use_key_frame: true  #使用关键帧
+    key_frame_len_thre: 0.3  #关键帧相距位移阈值；地下车库重复结构不宜过小，过密会增加误回环概率
+    key_frame_ang_thre: 0.1  #关键帧相距角度阈值；过小会让相似局部视角反复进入STD数据库
+    gps_waiting_time: 15.0   #在gps重新有信号多少秒后认为可信
+    gps_spacing_distance: 10.0  #至少每走多少距离加入一次gps优化因子
+    gps_spacing_time: 5.0      #至少每走多少时间加入一次gps优化因子
+
+
+# pre process
+ds_size: 0.2 #地图存取降采样率
+maximum_corner_num: 200  #每组取角点的最大数量；不考虑算力时适当增大，提升车库柱/墙角等结构描述能力
+
+# key points
+plane_detection_thre: 0.01
+plane_merge_normal_thre: 0.1
+plane_merge_dis_thre: 0.3
+voxel_size: 1.5  #取特征点依赖的体素大小；车库局部结构重复，略小可保留更多局部几何差异
+voxel_init_num: 10
+proj_image_resolution: 0.5 #将平面点聚合成像素分辨率
+proj_dis_min: 0
+proj_dis_max: 8
+corner_thre: 15  #取角点的阈值
+
+
+# std descriptor
+descriptor_near_num: 30  #每个角点搜索构造std三角形的邻近点数
+descriptor_min_len: 3  #STD三角形最短边；调大可过滤近距离重复小结构
+descriptor_max_len: 60 #STD三角形最长边；适当放大，让描述子覆盖更多车库柱网/墙面跨度
+non_max_suppression_radius: 2
+std_side_resolution: 0.2
+
+# candidate search
+skip_near_num: 25  #跳过近邻STD组；车库内需避免把相邻相似区域当回环
+candidate_num: 15  #回环检测备选数量；过大容易在重复结构中选到错误候选
+sub_frame_num: 15  #每几帧聚成一个STD小帧；增大可让描述子更稳定，提升全局回环可靠性
+vertex_diff_threshold: 0.45 #STD顶点附加信息差异阈值；调小更严格，抑制相似重复结构
+rough_dis_threshold: 0.01
+normal_threshold: 0.15 #平面法向匹配阈值；调小更严格
+dis_threshold: 0.25    #点到平面距离阈值；调小更严格，减少错配回环
+icp_threshold: 0.55  #回环检测ICP通过阈值；越大越严格，地下车库建议高于默认值
+center_dis_threshold: 30 #候选中心距离门限；调小可降低跨区域误回环

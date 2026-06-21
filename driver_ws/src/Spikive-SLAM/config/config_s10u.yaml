@@ -1,0 +1,67 @@
+common:
+    imu_topic: "/LxCamera_Imu"
+    time_sync_en: true
+    max_iteration: 8
+    filter_size_surf: 0.2
+    filter_size_map: 0.2
+    cube_side_length: 1000
+    # TODO(S10U): When using the flight-controller IMU, mapping/extrinsic_T/R must
+    # be calibrated from the S10Ultra LiDAR frame to the flight-controller IMU frame.
+    # /LxCamera_Imu is still published for diagnostics, but SLAM consumes imu_topic.
+
+s10u_common:
+    lid_topic: "/LxCamera_LidarCloud"
+
+s10u_preprocess:
+    lidar_type: 4
+    scan_line: 160
+    timestamp_unit: 2
+    scan_rate: 10
+    blind: 0.3
+    feature_extract_enable: false
+    point_filter_num: 4
+    fov_crop_enable: true
+    vertical_fov_degree: 65
+    horizontal_fov_degree: 100
+
+s10u_mapping:
+    extrinsic_T: [0, 0, 0]
+    extrinsic_R: [1, 0, 0,
+                  0, 1, 0,
+                  0, 0, 1]
+
+mapping:
+    acc_cov: 0.3
+    gyr_cov: 0.3
+    b_acc_cov: 0.0001
+    b_gyr_cov: 0.0001
+    fov_degree: 120
+    det_range: 90.0
+    display_lio_time: false
+    extrinsic_est_en: false
+    extrinsic_T: [0.0201, 0.00321, 0.0126]
+    extrinsic_E: [0, 0, 0]
+    extrinsic_R: [1, 0, 0,
+                  0, 1, 0,
+                  0, 0, 1]
+
+R: [0.0, 0.0, 1.0,
+    -1.0, 0.0, 0.0,
+    0.0, -1.0, 0.0] # 3x3 旋转矩阵 (按行展开)
+T: [0.065, 0.0, 0.085] # 3x1 平移向量
+
+
+publish:
+    path_en: true
+    scan_publish_en: true
+    dense_publish_en: true
+    scan_bodyframe_pub_en: true
+    state_print_en: false
+
+pcd_save:
+    pcd_save_en: false
+    interval: -1
+    save_result_en: false
+    enu_results: false
+    save_path: "/home/colman/data_slam/rosbags/lio_bags"
+    save_name: "s10u"

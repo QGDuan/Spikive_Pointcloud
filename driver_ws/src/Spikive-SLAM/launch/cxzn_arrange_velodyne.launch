@@ -1,0 +1,38 @@
+<launch>
+  <!-- Launch file for velodyne16 VLP-16 LiDAR -->
+
+  <arg name="rviz" default="true" />
+
+	<!-- config -->
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_velodyne.yaml" />
+    <rosparam command="load" file="$(find lsdc_slam)/config/velodyne.yaml" />
+	<param name="runtime_pos_log_enable" type="bool" value="0" />
+
+	<param name="feature_extract_enable" type="bool" value="0" />
+      <param name="point_filter_num" type="int" value="3" />
+      <param name="max_iteration" type="int" value="5" />
+      <param name="filter_size_surf" type="double" value="0.2" />
+      <param name="filter_size_map" type="double" value="0.2" />
+      <param name="cube_side_length" type="double" value="1000" />
+      <param name="runtime_pos_log_enable" type="bool" value="0" />
+
+	<!-- lsdc_slam -->
+	<node pkg="lsdc_slam" type="rs_velodyne" name="rs_to_velodyne" output="screen" />
+	<node pkg="lsdc_slam" type="lsdc_mapping" name="laserMapping" output="screen" args="mid360" />
+
+	<!-- lsdc_localization -->
+	<node pkg="lsdc_slam" type="lsdc_global_match" name="global_match" output="screen" />
+    <node pkg="lsdc_slam" type="lsdc_fusion_repub" name="fusion_repub" output="screen" />
+
+	<!-- lsdc_gnss_process -->
+	<node pkg="lsdc_slam" type="lsdc_ins_preprocess" name="ins_preprocess" output="screen" />
+	<node pkg="lsdc_slam" type="lsdc_rtk2pose" name="rtk2pose" output="screen" />
+	<node pkg="lsdc_slam" type="lsdc_repub_gnss" name="repub_gnss" output="screen" />
+
+
+	<!-- rviz -->
+	<group if="$(arg rviz)">
+		<node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz_localization" args="-d $(find lsdc_slam)/rviz_cfg/localization.rviz" />
+	</group>
+
+</launch>

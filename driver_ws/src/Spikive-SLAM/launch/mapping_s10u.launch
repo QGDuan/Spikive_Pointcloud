@@ -1,0 +1,33 @@
+<launch>
+	<!-- Launch file for MRDVS S10U camera point cloud input -->
+
+	<arg name="drone_id" default="2"/>
+	<arg name="odometry_topic" default="visual_slam/odom" />
+	<arg name="imu_topic" default="/LxCamera_Imu" />
+
+	<rosparam command="load" file="$(find lsdc_slam)/config/config.yaml" />
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_s10u.yaml" />
+	<param name="common/imu_topic" value="$(arg imu_topic)" />
+	<param name="runtime_pos_log_enable" type="bool" value="0" />
+
+	<!-- main node -->
+	<node pkg="lsdc_slam" type="lsdc_mapping" name="laserMapping" output="screen" args="s10u" />
+
+	<node pkg="lsdc_slam" type="lsdc_flight_controller" name="slam_to_uav_transform" output="screen">
+        <param name="init_x" type="double" value="0.0"/>
+        <param name="init_y" type="double" value="0.0"/>
+        <param name="init_z" type="double" value="0.0"/>
+        <param name="init_qx" type="double" value="0.0"/>
+        <param name="init_qy" type="double" value="0.0"/>
+        <param name="init_qz" type="double" value="0.0"/>
+        <param name="init_qw" type="double" value="1.0"/>
+	</node>
+	<node pkg="lsdc_slam" type="lsdc_fusion_repub" name="fusion_repub" output="screen">
+		<param name="drone_id" value="$(arg drone_id)" />
+		<param name="stable_cloud_topic" value="/drone_$(arg drone_id)_cloud_registered" />
+		<param name="stable_odom_topic" value="/drone_$(arg drone_id)_$(arg odometry_topic)" />
+		<param name="diff_odom_topic" value="/drone_$(arg drone_id)_diff_odom" />
+		<param name="init_match_success_topic" value="/drone_$(arg drone_id)_init_match_success" />
+	</node>
+
+</launch>

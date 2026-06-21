@@ -1,0 +1,147 @@
+<mxfile host="app.diagrams.net" modified="2026-05-02T00:00:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="slam-system" name="LSDC SLAM System">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="cluster_sensors" value="Sensors / Drivers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="230" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="cluster_slam" value="lsdc_slam LIO / Localization" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="40" width="620" height="540" as="geometry"/>
+        </mxCell>
+        <mxCell id="cluster_uav" value="UAV / Spikive Output" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="990" y="80" width="510" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="cluster_frames" value="Frame Chain" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="620" width="1180" height="250" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lidar" value="LiDAR&lt;br&gt;Livox / MID360" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="75" y="105" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="imu" value="IMU&lt;br&gt;/livox/imu/" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="75" y="185" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="gpsimu" value="INS570G / RTK&lt;br&gt;/rtk_gps + /rtk_imu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="75" y="265" width="150" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="mapping" value="lsdc_mapping&lt;br&gt;laserMapping&lt;br&gt;FastLIO2-derived LIO" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="380" y="120" width="190" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="ins_pre" value="lsdc_ins_preprocess&lt;br&gt;sync GPS + IMU&lt;br&gt;pub /lsdc_rtk" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="380" y="300" width="190" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="rtk2pose" value="lsdc_rtk2pose&lt;br&gt;RTK experiment path&lt;br&gt;/initial_pose + /rtk_odom" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="620" y="300" width="210" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="frontend_pose" value="Spikive-Lichtblick&lt;br&gt;Pose Estimate&lt;br&gt;/drone_{id}_initialpose" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="860" y="300" width="150" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="global_match" value="lsdc_global_match&lt;br&gt;WayPoint map ICP&lt;br&gt;/drone_{id}_diff_odom + status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="620" y="110" width="210" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="fusion" value="lsdc_fusion_repub&lt;br&gt;fallback / localized switch&lt;br&gt;stable /drone_* + MAVROS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="620" y="430" width="210" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="map_pcd" value="WayPoint localization map&lt;br&gt;/drone_{id}_localization_pcl&lt;br&gt;frame: map/world" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="380" y="430" width="190" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="flight" value="lsdc_flight_controller&lt;br&gt;calibration adapter&lt;br&gt;/Odometry_trans + /cloud_registered_trans" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="1040" y="150" width="210" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="mavros" value="MAVROS&lt;br&gt;/mavros/vision_pose/pose&lt;br&gt;/mavros/companion_process/status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="1290" y="120" width="180" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="lichtblick" value="Spikive-Lichtblick&lt;br&gt;/drone_{id}_visual_slam/odom&lt;br&gt;/drone_{id}_cloud_registered" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="1290" y="260" width="180" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="manager" value="Spikive Manager&lt;br&gt;roslaunch lsdc_slam mapping_livox.launch&lt;br&gt;checks /laserMapping + /slam_to_uav_transform" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="1040" y="330" width="430" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="frame_lidar" value="LiDAR frame" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="370" y="700" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frame_body" value="body&lt;br&gt;IMU/body" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="560" y="700" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frame_camera" value="camera_init&lt;br&gt;LIO world" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="750" y="700" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frame_map" value="map&lt;br&gt;WayPoint map world" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="940" y="700" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frame_world" value="world&lt;br&gt;fallback then map world" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="1130" y="700" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frame_base" value="base{id}&lt;br&gt;ground station follow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="1320" y="700" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frame_rtk" value="WGS84 / RTK / ENU&lt;br&gt;origin_L + origin_Q + kRot90" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="620" y="790" width="270" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_lidar_mapping" value="lid_topic" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="lidar" target="mapping">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_imu_mapping" value="/livox/imu/" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="imu" target="mapping">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_gps_ins" value="/rtk_gps + /rtk_imu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="gpsimu" target="ins_pre">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ins_rtk" value="/lsdc_rtk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="ins_pre" target="rtk2pose">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_rtk_global" value="/drone_{id}_initialpose" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="frontend_pose" target="global_match">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_map_global" value="/drone_{id}_localization_pcl" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="map_pcd" target="global_match">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_mapping_global" value="/Odometry_trans + /cloud_registered_trans" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="flight" target="global_match">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_global_fusion" value="/drone_{id}_diff_odom + /drone_{id}_init_match_success" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="global_match" target="fusion">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_mapping_fusion" value="/Odometry_trans + /cloud_registered_trans" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="flight" target="fusion">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_mapping_flight" value="/Odometry + /cloud_registered" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="mapping" target="flight">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_flight_mavros" value="stable vision pose + status" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="fusion" target="mavros">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_flight_licht" value="stable /drone_* topics" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="fusion" target="lichtblick">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_manager_mapping" value="starts launch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;dashed=1" edge="1" parent="1" source="manager" target="mapping">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_frame_1" value="mapping/extrinsic_T/R/E" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="frame_lidar" target="frame_body">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_frame_2" value="/Odometry pose" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="frame_body" target="frame_camera">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_frame_3" value="/drone_{id}_diff_odom correction" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="frame_map" target="frame_camera">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_frame_4" value="R/T/init then fusion switch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="frame_camera" target="frame_world">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_frame_5" value="planner odom_visualization" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;dashed=1" edge="1" parent="1" source="frame_world" target="frame_base">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_frame_6" value="rtk2pose / save_result" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="frame_rtk" target="frame_map">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

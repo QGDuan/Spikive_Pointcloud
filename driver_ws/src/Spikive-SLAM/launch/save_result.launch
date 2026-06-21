@@ -1,0 +1,17 @@
+<launch>
+  <arg name="drone_id" default="2" />
+  <arg name="imu_topic" default="/livox/imu/" />
+  <arg name="visual_odom_topic" default="/drone_$(arg drone_id)_visual_slam/odom" />
+  <arg name="save_dir" default="$(env HOME)/Spikive_save" />
+
+  <param name="common/imu_topic" value="$(arg imu_topic)" />
+
+  <node pkg="lsdc_slam"
+        type="lsdc_save_result"
+        name="drone_$(arg drone_id)_save_result"
+        output="screen">
+    <param name="drone_id" value="$(arg drone_id)" />
+    <param name="visual_odom_topic" value="$(arg visual_odom_topic)" />
+    <param name="save_dir" value="$(arg save_dir)" />
+  </node>
+</launch>

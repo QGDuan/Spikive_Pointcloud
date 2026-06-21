@@ -1,0 +1,16 @@
+mid360_common:
+    lid_topic:  "/livox/lidar_192_168_1_128"
+
+mid360_preprocess:
+    lidar_type: 1      
+    scan_line: 6
+    blind: 2
+    feature_extract_enable: false
+    point_filter_num: 3
+
+mid360_mapping: #相对于主雷达点云中心
+    extrinsic_T: [ 0, 0, 0 ]
+    extrinsic_R: [ 1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1]
+   

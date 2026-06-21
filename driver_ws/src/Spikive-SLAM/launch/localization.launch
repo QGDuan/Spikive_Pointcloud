@@ -1,0 +1,19 @@
+<launch>
+	<arg name="drone_id" default="2" />
+
+	<rosparam command="load" file="$(find lsdc_slam)/config/config.yaml" />
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_avia.yaml" />
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_mid360.yaml" />
+	<param name="runtime_pos_log_enable" type="bool" value="0" />
+
+	<node pkg="lsdc_slam" type="lsdc_global_match" name="global_match" output="screen">
+		<param name="drone_id" value="$(arg drone_id)" />
+		<param name="initial_pose_topic" value="/drone_$(arg drone_id)_initialpose" />
+		<param name="map_topic" value="/drone_$(arg drone_id)_localization_pcl" />
+		<param name="scan_topic" value="/cloud_registered_trans" />
+		<param name="odom_topic" value="/Odometry_trans" />
+		<param name="diff_odom_topic" value="/drone_$(arg drone_id)_diff_odom" />
+		<param name="init_match_success_topic" value="/drone_$(arg drone_id)_init_match_success" />
+		<param name="match_status_topic" value="/drone_$(arg drone_id)_localization_match_status" />
+	</node>
+</launch>

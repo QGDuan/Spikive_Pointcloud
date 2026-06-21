@@ -1,0 +1,33 @@
+<launch>
+	<arg name="rviz" default="true" />
+
+	<!-- config -->
+	<rosparam command="load" file="$(find lsdc_slam)/config/config.yaml" />
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_avia.yaml" />
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_mid360.yaml" />
+	<param name="runtime_pos_log_enable" type="bool" value="0" />
+	
+	<!-- lsdc_slam -->
+	<node pkg="lsdc_slam" type="lsdc_mapping" name="laserMapping" output="screen" args="mid360" />
+	
+	<!-- lsdc_localization -->
+	<node pkg="lsdc_slam" type="lsdc_init_pose" name="init_pose" output="screen" />
+	<node pkg="lsdc_slam" type="lsdc_global_match" name="global_match" output="screen" />
+    <node pkg="lsdc_slam" type="lsdc_fusion_repub" name="fusion_repub" output="screen" />
+   
+	<!-- lsdc_ins_process -->
+	<node pkg="lsdc_slam" type="lsdc_ins_preprocess" name="ins_preprocess" output="screen" />
+	<node pkg="lsdc_slam" type="lsdc_repub_gnss" name="repub_gnss" output="screen" />
+
+
+    <!-- cxzn_repub -->
+    <node name="lsdc_forward_node" pkg="lsdc_forward" type="lsdc_forward_node" respawn="true" output="screen" />
+    <param name = "remote_zmq_port_loc" type = "int" value = "7657" />
+    <param name = "ros_sub_topic" type = "string" value = "/global_pose" />
+
+	<!-- rviz -->
+	<group if="$(arg rviz)">
+		<node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz_localization" args="-d $(find lsdc_slam)/rviz_cfg/localization.rviz" />
+	</group>
+
+</launch>

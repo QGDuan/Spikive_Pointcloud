@@ -1,0 +1,74 @@
+common:
+    imu_topic: "/mavros/imu/data"
+    time_sync_en: true
+    max_iteration: 5
+    filter_size_surf: 0.2
+    filter_size_map: 0.2
+    cube_side_length: 1000
+    # TODO(S10U): When using the flight-controller IMU, mapping/extrinsic_T/R must
+    # be calibrated from the S10Ultra LiDAR frame to the flight-controller IMU frame.
+    # /LxCamera_Imu is still published for diagnostics, but SLAM consumes imu_topic.
+
+s10u_common:
+    lid_topic: "/LxCamera_LidarCloud"
+
+s10u_preprocess:
+    lidar_type: 4
+    scan_line: 160
+    timestamp_unit: 2
+    scan_rate: 10
+    blind: 0.5
+    feature_extract_enable: false
+    point_filter_num: 4
+    fov_crop_enable: true
+    vertical_fov_degree: 60
+    horizontal_fov_degree: 120
+
+s10u_mapping:
+    extrinsic_T: [0, 0, 0]
+    # Single S10Ultra is the main cloud source. Keep this transform as identity;
+    # LiDAR-to-IMU calibration for LIO is configured in mapping/extrinsic_T/R.
+    extrinsic_R: [1, 0, 0,
+                  0, 1, 0,
+                  0, 0, 1]
+
+mapping:
+    acc_cov: 0.05
+    gyr_cov: 0.05
+    b_acc_cov: 0.0001
+    b_gyr_cov: 0.0001
+    fov_degree: 120
+    det_range: 45.0
+    display_lio_time: false
+    extrinsic_est_en: false
+    extrinsic_T: [0.065, 0.0, 0.085]
+    extrinsic_E: [0, 0, 0]
+    # MRDVS XYZIRT is not explicitly switched to SDK robot coordinates in the
+    # driver, so treat it as camera coordinates: x right, y down, z forward.
+    # MAVROS /mavros/imu/data is published in base_link. For a forward-facing
+    # S10Ultra, this maps LiDAR camera coordinates to base_link:
+    # x_base = z_lidar, y_base = -x_lidar, z_base = -y_lidar.
+    extrinsic_R: [0, 0, 1,
+                  -1, 0, 0,
+                  0, -1, 0]
+
+R: [1.0, 0.0, 0.0,
+    0.0, 1.0,  0.0,
+    0.0, 0.0, 1.0] # 3x3 旋转矩阵 (按行展开)
+T: [0.0, 0.0, 0.0] # 3x1 平移向量
+
+
+publish:
+    path_en: true
+    scan_publish_en: true
+    dense_publish_en: true
+    scan_bodyframe_pub_en: true
+    state_print_en: false
+
+pcd_save:
+    pcd_save_en: false
+    interval: -1
+    save_result_en: false
+    enu_results: false
+    save_path: "/home/colman/data_slam/rosbags/lio_bags"
+    save_name: "s10u"

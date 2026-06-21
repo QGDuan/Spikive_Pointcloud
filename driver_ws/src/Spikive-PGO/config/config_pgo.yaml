@@ -1,0 +1,43 @@
+# lsdc loop
+loop:
+    use_key_frame: true  #使用关键帧
+    key_frame_len_thre: 0.1  #关键帧相距位移阈值（性能不好适当调大）
+    key_frame_ang_thre: 0.1  #关键帧相距角度阈值（性能不好适当调大）
+    gps_waiting_time: 12.0   #在gps重新有信号多少秒后认为可信
+    gps_spacing_distance: 10.0  #至少每走多少距离加入一次gps优化因子
+    gps_spacing_time: 5.0      #至少每走多少时间加入一次gps优化因子
+
+
+# pre process
+ds_size: 0.2
+maximum_corner_num: 200
+
+# key points
+plane_detection_thre: 0.01
+plane_merge_normal_thre: 0.1
+plane_merge_dis_thre: 0.3
+voxel_size: 2
+voxel_init_num: 10
+proj_image_resolution: 0.5
+proj_dis_min: 0
+proj_dis_max: 8
+corner_thre: 15
+
+
+# std descriptor
+descriptor_near_num: 30
+descriptor_min_len: 2
+descriptor_max_len: 50
+non_max_suppression_radius: 2
+std_side_resolution: 0.2
+
+# candidate search
+skip_near_num: 50
+candidate_num: 20 #50
+sub_frame_num: 10
+vertex_diff_threshold: 0.5
+rough_dis_threshold: 0.01
+normal_threshold: 0.2
+dis_threshold: 0.5
+icp_threshold: 0.3
+center_dis_threshold: 5

@@ -1,0 +1,16 @@
+mid70_common:
+    lid_topic:  "/livox/lidar"
+
+mid70_preprocess:
+    lidar_type: 1      
+    scan_line: 6
+    blind: 1
+    feature_extract_enable: false
+    point_filter_num: 3
+
+mid70_mapping: #相对于主雷达点云中心
+    extrinsic_T: [ 0.044, 0.0, -0.08622 ] #柳州mid70+mid360
+    extrinsic_R: [ 1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1]
+   

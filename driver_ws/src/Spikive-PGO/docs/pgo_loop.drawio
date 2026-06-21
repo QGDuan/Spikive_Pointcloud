@@ -1,0 +1,138 @@
+<mxfile host="app.diagrams.net" modified="2026-05-02T00:00:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="pgo-loop" name="LSDC PGO Loop">
+    <mxGraphModel dx="1500" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="cluster_inputs" value="Inputs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="70" width="260" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="cluster_core" value="lsdc_pgo / std_loop" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="360" y="50" width="680" height="590" as="geometry"/>
+        </mxCell>
+        <mxCell id="cluster_outputs" value="Outputs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1100" y="80" width="340" height="520" as="geometry"/>
+        </mxCell>
+        <mxCell id="cluster_frames" value="Frame / Integration Notes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="360" y="690" width="1080" height="140" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="live_cloud" value="Online cloud_topic&lt;br&gt;/cloud_registered_body" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="180" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="live_odom" value="Online odom_topic&lt;br&gt;/Odometry or /Odometry_enu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="80" y="210" width="180" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="live_gps" value="Online gps_topic&lt;br&gt;/rtk_odom or /rtk_odom_enu" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="80" y="300" width="180" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="offline_files" value="Offline files&lt;br&gt;*_cloud.bag&lt;br&gt;*_pose.txt&lt;br&gt;*_loop.txt" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="80" y="390" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="pairing" value="timestamp pairing&lt;br&gt;PclOdomPair queue" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="410" y="120" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="preprocess" value="msgpairPreprocess&lt;br&gt;downsample + transform" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="630" y="120" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="keyframe" value="keyframe selection&lt;br&gt;distance + angle thresholds" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="830" y="120" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="std_desc" value="STD descriptor&lt;br&gt;planes, corners, triangles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="530" y="260" width="190" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="loop_detect" value="loop candidate search&lt;br&gt;geometric + ICP verification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="780" y="260" width="190" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="gps_factor" value="GPS preprocess&lt;br&gt;spacing time + distance&lt;br&gt;waiting time gate" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="410" y="400" width="190" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="graph" value="GTSAM factor graph&lt;br&gt;odometry + loop + GPS factors" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="650" y="400" width="190" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="isam" value="ISAM2 update&lt;br&gt;calculateEstimate()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="870" y="400" width="130" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="file_pre" value="FilePreprocess / preprocessStd&lt;br&gt;run_pgo=true or use_file=true" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf" vertex="1" parent="1">
+          <mxGeometry x="410" y="540" width="250" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="viz_out" value="Visualization topics&lt;br&gt;/cloud_current&lt;br&gt;/cloud_matched&lt;br&gt;descriptor_line" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="1140" y="130" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="path_out" value="Path / odom topics&lt;br&gt;/lio_path&lt;br&gt;/pgo_path&lt;br&gt;/odom_corrected" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="1140" y="250" width="250" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="map_out" value="Map outputs&lt;br&gt;/pgo_map&lt;br&gt;*_map.pcd" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="1140" y="370" width="250" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="file_out" value="Saved graph files&lt;br&gt;*_pose.txt&lt;br&gt;*_loop.txt" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#82b366" vertex="1" parent="1">
+          <mxGeometry x="1140" y="480" width="250" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="frame_note_1" value="PGO outputs are mostly frame_id=camera_init" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="410" y="740" width="260" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frame_note_2" value="Default odom/GPS are /Odometry_enu and /rtk_odom_enu in code" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="720" y="740" width="320" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="frame_note_3" value="Spikive world topics are not direct PGO defaults" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656" vertex="1" parent="1">
+          <mxGeometry x="1090" y="740" width="300" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_live_cloud" value="cloud_topic" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="live_cloud" target="pairing">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_live_odom" value="odom_topic" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="live_odom" target="pairing">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_live_gps" value="gps_topic" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="live_gps" target="gps_factor">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_offline_filepre" value="run_pgo/use_file" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="offline_files" target="file_pre">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_file_pairing" value="PclOdomPair queue" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="file_pre" target="pairing">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_pair_pre" value="paired cloud+odom" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="pairing" target="preprocess">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_pre_key" value="current frame" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="preprocess" target="keyframe">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_key_std" value="keyframe cloud" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="keyframe" target="std_desc">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_std_loop" value="descriptors" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="std_desc" target="loop_detect">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_loop_graph" value="loop factors" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="loop_detect" target="graph">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_gps_graph" value="GPS factors" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="gps_factor" target="graph">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_key_graph" value="odometry factors" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="keyframe" target="graph">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_graph_isam" value="update graph" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="graph" target="isam">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_isam_viz" value="current/matched clouds" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="isam" target="viz_out">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_isam_path" value="optimized poses" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="isam" target="path_out">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_isam_map" value="registered clouds" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="isam" target="map_out">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_isam_file" value="save pose/loop" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1" edge="1" parent="1" source="isam" target="file_out">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

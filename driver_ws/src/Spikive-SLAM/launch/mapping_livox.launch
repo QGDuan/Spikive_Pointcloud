@@ -1,0 +1,44 @@
+<launch>
+	<!-- Launch file for Livox AVIA LiDAR -->
+
+	<arg name="rviz" default="true" />
+	<arg name="drone_id" default="2"/>
+	<arg name="odometry_topic" default="visual_slam/odom" />
+
+	<rosparam command="load" file="$(find lsdc_slam)/config/config.yaml" />
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_avia.yaml" />
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_mid360.yaml" />
+	<rosparam command="load" file="$(find lsdc_slam)/config/config_mid70.yaml" />
+	<param name="runtime_pos_log_enable" type="bool" value="0" />
+
+	<!-- preprocess node-->
+	<!-- <node pkg="lsdc_slam" type="lsdc_ins_preprocess" name="ins_preprocess" output="screen" /> -->
+	<!-- <node pkg="lsdc_slam" type="rs_velodyne" name="rs_to_velodyne" output="screen" /> -->
+
+	<!-- main node -->
+	<node pkg="lsdc_slam" type="lsdc_mapping" name="laserMapping" output="screen" args="mid360" />
+	<!-- <node pkg="lsdc_slam" type="lsdc_rtk2pose" name="rtk2pose" output="screen" /> -->
+	<!-- <node pkg="lsdc_slam" type="lsdc_save_result" name="save_result" output="screen" /> -->
+
+	<node pkg="lsdc_slam" type="lsdc_flight_controller" name="slam_to_uav_transform" output="screen">
+        <param name="init_x" type="double" value="0.0"/>
+        <param name="init_y" type="double" value="0.0"/>
+        <param name="init_z" type="double" value="0.0"/>
+        <param name="init_qx" type="double" value="0.0"/>
+        <param name="init_qy" type="double" value="0.0"/>
+        <param name="init_qz" type="double" value="0.0"/>
+        <param name="init_qw" type="double" value="1.0"/>
+	</node>
+	<node pkg="lsdc_slam" type="lsdc_fusion_repub" name="fusion_repub" output="screen">
+		<param name="drone_id" value="$(arg drone_id)" />
+		<param name="stable_cloud_topic" value="/drone_$(arg drone_id)_cloud_registered" />
+		<param name="stable_odom_topic" value="/drone_$(arg drone_id)_$(arg odometry_topic)" />
+		<param name="diff_odom_topic" value="/drone_$(arg drone_id)_diff_odom" />
+		<param name="init_match_success_topic" value="/drone_$(arg drone_id)_init_match_success" />
+	</node>
+	<!-- <group if="$(arg rviz)">
+		<node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz_lio"
+			args="-d $(find lsdc_slam)/rviz_cfg/loam_livox.rviz" />
+	</group> -->
+
+</launch>

@@ -1,0 +1,98 @@
+common:
+    # imu_topic:  "/mavros/imu/data"
+
+    imu_topic:  "/livox/imu/"
+    max_iteration: 5
+    filter_size_surf: 0.4  #性能不好达不到实时要改为0.3，正常配置为0.2
+    filter_size_map: 0.4   #性能不好达不到实时要改为0.3，正常配置为0.2
+    cube_side_length: 1000
+
+
+mapping:
+    acc_cov: 0.1
+    gyr_cov: 0.1
+    b_acc_cov: 0.0001
+    b_gyr_cov: 0.0001
+    fov_degree:    360
+    det_range:     60
+    display_lio_time: false
+    extrinsic_est_en:  true      # true: enable the online estimation of IMU-LiDAR extrinsic
+    extrinsic_T: [ -0.011, 0.02329, 0.04412 ] #主雷达点云中心相对于IMU中心
+    extrinsic_R: [ 1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1]
+    # extrinsic_R: [0.7071, 0.0, 0.7071,
+    #     0.0, 1.0,  0.0,
+    #     -0.7071, 0.0, 0.7071] # 3x3 旋转矩阵 (按行展开)
+    # extrinsic_T: [0.06, 0.0, 0.06] # 3x1 平移向量
+   
+publish:
+    path_en:  true
+    scan_publish_en:  true       # false: close all the point cloud output
+    dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
+    scan_bodyframe_pub_en: true  # true: output the point cloud scans in IMU-body-frame
+    state_print_en: false        # 打印状态（位置、速度等）
+
+pcd_save:
+    pcd_save_en: false
+    interval: -1                 # how many LiDAR frames saved in each pcd file; 
+    # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
+    save_result_en: false
+    enu_results: false
+    save_path: "/home/colman/data_slam/rosbags/lio_bags"
+    save_name: "23"
+
+ins:
+    gps_topic: "/rtk_gps"
+    imu_topic: "/rtk_imu"
+
+R: [0.9171, 0.0, 0.3987,
+    0.0, 1.0,  0.0,
+    -0.3987, 0.0, 0.9171] # 3x3 旋转矩阵 (按行展开)
+T: [0.065, 0.0, 0.071] # 3x1 平移向量
+
+localization:
+    match_freq: 1
+    filter_size_map: 0.2
+    filter_size_src: 0.1
+    fov_far: 80
+    fov_ang: 360
+    max_iteration: 20
+    display_matching_time: false
+    debug_do_not_match: false
+    fitness_threshold: 0.3
+    success_confirm_count: 10
+    match_timeout_sec: 20.0
+    status_publish_period_sec: 1.0
+    continuous_match: false
+    initial_pose_is_world: true
+
+
+# R: [1.0, 0.0, 0.0,
+#     0.0, 1.0, 0.0,
+#     0.0, 0.0, 1.0]
+# T: [0.0, 0.0, 0.0]
+# rtk:
+#     T_rtk_wrt_body: [-1.15, 0, 0.9] #以雷达中心为原点，指向rtk中心的向量(小灰车-物流车)
+#     E_rtk_wrt_body: [1.2, -10, 0] #rtk坐标系相对于雷达中心坐标系的角度（分别绕z、y、x轴逆时针旋转的角度）
+#     T_car_wrt_rtk: [-0.245, 0.263, 0] #以rtk中心为原点，指向后轴中心的向量
+#     E_car_wrt_rtk: [0, 0, 0]
+#     # T_rtk_wrt_body: [1.3, -0.03, 0.85]
+#     # E_rtk_wrt_body: [0, 0, 0]
+#     use_map_origin: true  #rtk坐标系使用地图原点，否则使用初始位置为原点
+#     frame_id: "camera_init"  #坐标系(localization用map)
+
+# localization:
+#     map_address: "MAP/up_pgo_gps_map.pcd"
+#     match_freq: 1    #性能不好达不到实时改为0.5
+#     repub_freq: 50
+#     filter_size_map: 0.2   #性能不好达不到实时要改为0.3，正常配置为0.2
+#     filter_size_src: 0.1
+#     fov_far: 80
+#     fov_ang: 360
+#     max_iteration: 20
+#     display_matching_time: false
+#     debug_do_not_match: true
+
+#     origin_L: [24.33399863931595419331, 109.36962050186761530313, 94.71257697271963138519]
+#     origin_Q: [0.05587037750348594622, 0.04851954093778890892, -0.70345843346581538036, 0.70687381296142615117]    #localization使用enu坐标地图则注释掉origin_Q

@@ -1,0 +1,69 @@
+common:
+    imu_topic: "/rtk_imu"
+    max_iteration: 5
+    filter_size_surf: 0.2   #性能不好达不到实时要改为0.3，正常配置为0.2
+    filter_size_map: 0.2    #性能不好达不到实时要改为0.3，正常配置为0.2
+    cube_side_length: 1000
+
+   
+publish:
+    path_en:  true
+    scan_publish_en:  true       # false: close all the point cloud output
+    dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
+    scan_bodyframe_pub_en: true  # true: output the point cloud scans in IMU-body-frame
+    state_print_en: false        # 打印状态（位置、速度等）
+
+pcd_save:
+    pcd_save_en: false
+    interval: -1                 # how many LiDAR frames saved in each pcd file; 
+    # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
+    save_result_en: false
+    save_path: "/home/lsdc/data_slam/rosbags/lio_bags"
+    save_name: "32"
+
+ins:
+    gps_topic: "/rtk_gps"
+    imu_topic: "/rtk_imu"
+
+rtk:    
+    T_rtk_wrt_body: [-1.15, 0.71, 0.425] #以雷达中心为原点，指向rtk中心的向量(小灰车-物流车)
+    E_rtk_wrt_body: [0, 0, 0]
+    T_car_wrt_rtk: [-0.245, 0.263, -0.64] #以rtk中心为原点，指向后轴中心的向量
+    E_car_wrt_rtk: [0, 0, 0]
+    # T_rtk_wrt_body: [1.3, -0.03, 0.85] 
+    # E_rtk_wrt_body: [0, 0, 0]
+    use_map_origin: true  #rtk坐标系使用地图原点，否则使用初始位置为原点
+    frame_id: "camera_init"  #坐标系(localization用map)
+
+localization:
+    map_address: "MAP/pgo_map.pcd"
+    match_freq: 1    #性能不好达不到实时改为0.5
+    repub_freq: 50
+    filter_size_map: 0.2   #性能不好达不到实时要改为0.3，正常配置为0.2
+    filter_size_src: 0.1
+    fov_far: 80
+    fov_ang: 360
+    max_iteration: 20
+    display_matching_time: false
+    debug_do_not_match: false
+
+#    origin_L: [24.33219382765074101371, 109.36827401837557260933, 98.27659119850517299710]
+#    origin_Q: [-0.04589721648826150524, 0.05884669829227932164, 0.68340667018962530932, 0.72621335347062865306]
+    origin_L: [31.463863599999996268, 120.64755919999998923 ,2.8330000000005384209] #lat, lon, alt
+    origin_Q: [ 0.0045043093470663363512, 0.0019040776920143268145, -0.089339202835144779224 ,   0.9959892532162331058] #x, y, z, w
+    # 麻地梁
+    # origin_L: [39.515013500000002011, 111.19826689999999303, 0] #lat, lon, alt
+    # origin_Q: [0, 0, 0.68354771588840301799, 0.72990582961348315916] #x, y, z, w
+
+    # 柳州route_24
+    # origin_L: [24.333942999999976564, 109.36914509999996881,  96.07699999999931606] #lat, lon, alt
+    # origin_Q: [0.0076104180802566796446, -0.0094332069525196043935,   0.033806189992769811181,    0.99935491076064031368] #x, y, z, w
+
+    # 柳州route_41
+    # origin_L: [24.332331999999979644, 109.36849969999997256, 96.407999999999447027] #lat, lon, alt
+    # origin_Q: [0.0040047340606562033954, -0.00088141876305686749863,     0.99957097881903256287,    0.029000750142518100239] #x, y, z, w
+
+
+
+
+    

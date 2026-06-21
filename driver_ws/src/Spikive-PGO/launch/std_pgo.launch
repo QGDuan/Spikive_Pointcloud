@@ -1,0 +1,28 @@
+<launch>
+<!-- Launch file for Livox AVIA LiDAR -->
+
+  <arg name="rviz" default="true" />
+  <rosparam command="load" file="$(find lsdc_pgo)/config/config_pgo.yaml" />
+  <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz_pgo" args="-d $(find lsdc_pgo)/rviz_cfg/pgo.rviz" />
+  </group>
+
+  <!-- <node pkg="lsdc_pgo" type="std_pgo" name="std_pgo" output="screen" /> -->
+  <node pkg="lsdc_pgo" type="std_loop" name="std_loop" output="screen" />
+  <param name="run_pgo" type="bool" value = "true"/>  <!-- 永远置true -->
+  
+  
+  <!-- 待读取的cloud和odom消息名 -->
+  <param name="cloud_topic" type="string" value = "/cloud_registered_body"/>
+  <param name="gps_topic" type="string" value = "/rtk_odom_enu"/>
+
+  <param name="use_gps" type="bool" value = "true"/>  <!-- 使用gps -->
+  <param name="map_resolution" type="double" value = "0.2"/>  <!-- 地图分辨率 -->
+
+  <!-- 输入文件：点云bag和pose文件分别命名为 "xxx_cloud.bag" 和 "xxx_pose.bag"，"input_names"="xxx"-->
+  <param name="input_bag_names" type="string" value = "23_enu-24_enu-32_enu-19_enu-9_enu-x_enu-418_enu"/>
+  <param name="input_pose_names" type="string" value = "pgo"/>
+  <!-- <param name="input_path" type="string" value = "/media/lsdc/data/20230706/slam_database/"/>-->
+  <param name="input_path" type="string" value = "/media/lsdc/data/20230706/slam_database/"/>
+
+</launch>

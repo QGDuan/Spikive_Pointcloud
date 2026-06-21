@@ -1,0 +1,32 @@
+<launch>
+<!-- Launch file for Livox AVIA LiDAR -->
+
+  <arg name="rviz" default="true" />
+  <rosparam command="load" file="$(find lsdc_pgo)/config/config_loop.yaml" />
+  <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz_loop" args="-d $(find lsdc_pgo)/rviz_cfg/loop.rviz" />
+  </group>
+
+  <node pkg="lsdc_pgo" type="std_loop" name="std_loop" output="screen" />
+
+  <!-- 使用优化方法 -->
+  <param name="use_loop" type="bool" value = "true"/>
+  <param name="use_gps" type="bool" value = "true"/>
+  <param name="use_file" type="bool" value = "false"/>
+  
+  <!-- 待接收的cloud和odom消息名 -->
+  <param name="cloud_topic" type="string" value = "/cloud_registered_body"/>
+  <param name="odom_topic" type="string" value = "/Odometry_enu"/>
+  <param name="gps_topic" type="string" value = "/rtk_odom_enu"/>
+
+  <!-- 输入已优化过的pose和loop文件 -->
+  <param name="input_path" type="string" value = "/home/lsdc/data_slam/rosbags/lio_bags/"/>
+  <param name="input_bag_names" type="string" value = "24-23-32"/>
+  <param name="input_pose_names" type="string" value = "loop"/>
+  <param name="input_loop_names" type="string" value = "loop"/>
+  
+  <!-- 输出优化后pose文件 -->
+  <param name="save_path" type="string" value = "/home/lsdc/data_slam/rosbags/lio_bags"/>
+  <param name="save_name" type="string" value = "loop"/>
+
+</launch>
