@@ -11,7 +11,9 @@ groundtruth:
   frame_tree_voxel_size: 0.10
   frame_tree_max_points: 800000
 
-output_root: output/groundtruth_eval
+output_root: output/param_sweep/drone_2_gld_indexed/pgo_global_safe/groundtruth_eval
+# ICP结果统一输出目录：保存每个case/mode/target的RT矩阵和对齐后的新点云。
+icp_output_root: output/param_sweep/drone_2_gld_indexed/pgo_global_safe/ICP
 
 # 两种比对方式：
 # overall_icp：整张结果地图独立匹配LAS，评价最终形状贴合真值。
@@ -65,4 +67,3 @@ cases:
     root: output/param_sweep/drone_2_gld_indexed/pgo_global_safe
   - name: pgo_global_safe_hba3
     root: output/param_sweep/drone_2_gld_indexed/pgo_global_safe_hba3
-

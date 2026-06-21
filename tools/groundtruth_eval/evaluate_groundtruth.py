@@ -635,6 +635,10 @@ def default_cases(project_root: Path) -> List[Dict]:
     ]
 
 
+def icp_output_dir(icp_root: Path, target: LoadedTarget, mode: str) -> Path:
+    return icp_root / target.case_name / mode / target.target_name
+
+
 def load_targets(case: Dict, project_root: Path, selected_targets: Optional[Sequence[str]]) -> List[LoadedTarget]:
     case_root = resolve_path(case["root"], project_root)
     target_cfg = DEFAULT_TARGETS.copy()
@@ -663,6 +667,7 @@ def evaluate_target(
     groundtruth: np.ndarray,
     groundtruth_tree: cKDTree,
     output_root: Path,
+    icp_root: Path,
     cfg: Dict,
     modes: Sequence[str],
     map_only: bool,
@@ -710,7 +715,9 @@ def evaluate_target(
 
     for mode, (transform, align_info) in transforms.items():
         out_dir = output_root / target.case_name / mode / target.target_name
+        icp_dir = icp_output_dir(icp_root, target, mode)
         out_dir.mkdir(parents=True, exist_ok=True)
+        icp_dir.mkdir(parents=True, exist_ok=True)
         if transform is None:
             result = {
                 "case": target.case_name,
@@ -720,6 +727,7 @@ def evaluate_target(
                 "alignment": align_info,
             }
             dump_yaml(out_dir / "map_metrics.yaml", result)
+            dump_yaml(icp_dir / "map_metrics.yaml", result)
             results.append(result)
             continue
 
@@ -732,7 +740,7 @@ def evaluate_target(
                 int(map_cfg.get("aligned_map_max_points", 1000000)),
                 seed=37,
             )
-            write_pcd_xyz(out_dir / "aligned_map.pcd", aligned)
+            write_pcd_xyz(icp_dir / "aligned_map.pcd", aligned)
         transform_doc = {
             "case": target.case_name,
             "target": target.target_name,
@@ -742,6 +750,7 @@ def evaluate_target(
             "alignment": align_info,
         }
         dump_yaml(out_dir / "transform_lidar_to_las.yaml", transform_doc)
+        dump_yaml(icp_dir / "transform_lidar_to_las.yaml", transform_doc)
         map_doc = {
             "case": target.case_name,
             "target": target.target_name,
@@ -750,9 +759,13 @@ def evaluate_target(
             "map_path": str(target.map_path),
             "bag_path": str(target.bag_path) if target.bag_path else None,
             "topic": target.topic,
+            "icp_output_dir": str(icp_dir),
+            "aligned_map": str(icp_dir / "aligned_map.pcd") if save_aligned_map else None,
+            "transform_lidar_to_las": str(icp_dir / "transform_lidar_to_las.yaml"),
             "metrics": metrics,
         }
         dump_yaml(out_dir / "map_metrics.yaml", map_doc)
+        dump_yaml(icp_dir / "map_metrics.yaml", map_doc)
 
         frame_summary = {"status": "skipped", "reason": "map_only"}
         if not map_only:
@@ -765,6 +778,9 @@ def evaluate_target(
             "map_metrics": metrics,
             "frame_metrics": frame_summary,
             "output_dir": str(out_dir),
+            "icp_output_dir": str(icp_dir),
+            "aligned_map": str(icp_dir / "aligned_map.pcd") if save_aligned_map else None,
+            "transform_lidar_to_las": str(icp_dir / "transform_lidar_to_las.yaml"),
         }
         results.append(result)
     return results
@@ -803,6 +819,9 @@ def summarize_results(results: List[Dict], output_root: Path) -> Dict:
                 "target": r["target"],
                 "source_to_groundtruth_p95": map_p95(r),
                 "output_dir": r["output_dir"],
+                "icp_output_dir": r["icp_output_dir"],
+                "aligned_map": r.get("aligned_map"),
+                "transform_lidar_to_las": r.get("transform_lidar_to_las"),
             }
             for r in overall_rank
         ],
@@ -815,6 +834,9 @@ def summarize_results(results: List[Dict], output_root: Path) -> Dict:
                 "frame_p95_p95": r.get("frame_metrics", {}).get("p95_p95"),
                 "frame_p95_max": r.get("frame_metrics", {}).get("p95_max"),
                 "output_dir": r["output_dir"],
+                "icp_output_dir": r["icp_output_dir"],
+                "aligned_map": r.get("aligned_map"),
+                "transform_lidar_to_las": r.get("transform_lidar_to_las"),
             }
             for r in start_frame_rank
         ],
@@ -841,12 +863,12 @@ def write_markdown_report(path: Path, summary: Dict) -> None:
         f.write("# LAS Ground Truth Evaluation Report\n\n")
         f.write("LAS真值只用于离线评价，不参与PGO/HBA优化。\n\n")
         f.write("## Overall ICP Map Ranking\n\n")
-        f.write("| Rank | Case | Target | Source->GT p95 (m) | Output |\n")
+        f.write("| Rank | Case | Target | Source->GT p95 (m) | ICP Output |\n")
         f.write("|---:|---|---|---:|---|\n")
         for idx, row in enumerate(summary.get("overall_icp_map_p95_rank", []), 1):
             f.write(
                 f"| {idx} | {row['case']} | {row['target']} | "
-                f"{row['source_to_groundtruth_p95']:.6f} | `{row['output_dir']}` |\n"
+                f"{row['source_to_groundtruth_p95']:.6f} | `{row['icp_output_dir']}` |\n"
             )
         f.write("\n## Start Segment ICP Frame-p95 Ranking\n\n")
         f.write("| Rank | Case | Target | Frame p95 mean (m) | Frame p95 std (m) | Frame p95 p95 (m) | Max (m) |\n")
@@ -897,6 +919,7 @@ def main() -> int:
     parser.add_argument("--config", default="tools/groundtruth_eval/groundtruth_eval.yaml")
     parser.add_argument("--project-root", default=None)
     parser.add_argument("--output-root", default=None)
+    parser.add_argument("--icp-output-root", default=None)
     parser.add_argument("--cases", default=None, help="Comma-separated case names.")
     parser.add_argument("--targets", default=None, help="Comma-separated target names: input,pgo,hba.")
     parser.add_argument("--modes", default=None, help="Comma-separated modes: overall_icp,start_segment_icp.")
@@ -913,7 +936,12 @@ def main() -> int:
     config_path = resolve_path(args.config, project_root)
     cfg = apply_cli_overrides(load_yaml(config_path), args)
     output_root = resolve_path(cfg.get("output_root", "output/groundtruth_eval"), project_root)
+    icp_output_root = resolve_path(
+        args.icp_output_root or cfg.get("icp_output_root", "output/ICP"),
+        project_root,
+    )
     output_root.mkdir(parents=True, exist_ok=True)
+    icp_output_root.mkdir(parents=True, exist_ok=True)
 
     selected_cases = set(args.cases.split(",")) if args.cases else None
     selected_targets = args.targets.split(",") if args.targets else None
@@ -961,6 +989,7 @@ def main() -> int:
                     groundtruth,
                     groundtruth_tree,
                     output_root,
+                    icp_output_root,
                     cfg,
                     modes=modes,
                     map_only=args.map_only,

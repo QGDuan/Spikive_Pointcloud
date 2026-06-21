@@ -51,18 +51,22 @@ python3 tools/groundtruth_eval/evaluate_groundtruth.py \
 
 ## 输出
 
-默认输出到 `output/groundtruth_eval/`：
+默认输出到 `output/param_sweep/drone_2_gld_indexed/pgo_global_safe/groundtruth_eval/`：
 
 - `summary_compare.yaml`：总排名和所有指标。
 - `report.md`：Markdown 总报告。
-- `{case}/{mode}/{target}/aligned_map.pcd`：对齐到 LAS 坐标系的地图。
-- `{case}/{mode}/{target}/transform_lidar_to_las.yaml`：刚体变换矩阵。
 - `{case}/{mode}/{target}/map_metrics.yaml`：整体地图误差。
 - `{case}/{mode}/{target}/frame_metrics.csv`：逐帧误差。
 - `{case}/{mode}/{target}/worst_frames.csv`：最差帧列表。
+
+ICP 的 RT 和对齐后新点云统一输出到
+`output/param_sweep/drone_2_gld_indexed/pgo_global_safe/ICP/`：
+
+- `{case}/{mode}/{target}/aligned_map.pcd`：对齐到 LAS 坐标系的新点云。
+- `{case}/{mode}/{target}/transform_lidar_to_las.yaml`：ICP 求出的刚体 RT。
+- `{case}/{mode}/{target}/map_metrics.yaml`：该对齐结果的整体误差。
 
 最终参数结论应同时看：
 
 - `overall_icp_map_p95_rank`：最终地图贴合真值的能力。
 - `start_segment_icp_frame_p95_rank`：起点固定后逐帧误差的稳定性。
-
