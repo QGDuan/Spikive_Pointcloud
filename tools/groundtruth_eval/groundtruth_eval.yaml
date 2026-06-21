@@ -1,0 +1,68 @@
+# 独立LAS真值评估配置。
+# 注意：gld_fr_groundtruth.las 只允许在本工具中作为结果比较真值使用，
+# 不允许被PGO/HBA/SLAM优化流程读取。
+
+groundtruth:
+  path: gld_fr_groundtruth.las
+  # 读入LAS用于配准/统计的最多点数。点数越大越慢，但报告更稳定。
+  load_max_points: 1500000
+  load_voxel_size: 0.0
+  # 逐帧评价KDTree使用的真值点云。0.10m对车库结构比较稳。
+  frame_tree_voxel_size: 0.10
+  frame_tree_max_points: 800000
+
+output_root: output/groundtruth_eval
+
+# 两种比对方式：
+# overall_icp：整张结果地图独立匹配LAS，评价最终形状贴合真值。
+# start_segment_icp：只用bag起始段匹配LAS，再把同一变换用于全程，评价漂移/分层。
+modes:
+  - overall_icp
+  - start_segment_icp
+
+thresholds_m: [0.05, 0.10, 0.20, 0.50]
+
+alignment:
+  # 配准只做刚体SE(3)，不做尺度缩放。
+  source_voxel_size: 0.25
+  groundtruth_voxel_size: 0.25
+  source_max_points: 150000
+  groundtruth_max_points: 250000
+  init_source_max_points: 20000
+  init_groundtruth_max_points: 60000
+  init_iterations: 8
+  max_iterations: 40
+  init_max_correspondence_distance: 10.0
+  max_correspondence_distance: 5.0
+  trim_fraction: 0.85
+  min_pairs: 500
+
+map:
+  # 地图读入和评价采样。现有pgo/hba地图约100MB，可直接读。
+  load_max_points: 1200000
+  load_voxel_size: 0.0
+  metric_source_voxel_size: 0.10
+  metric_groundtruth_voxel_size: 0.10
+  metric_source_max_points: 500000
+  metric_groundtruth_max_points: 500000
+  aligned_map_voxel_size: 0.10
+  aligned_map_max_points: 1000000
+
+frame:
+  # 起点匹配：bag前10秒或最多100帧。
+  start_segment_duration_sec: 10.0
+  start_segment_max_frames: 100
+  start_segment_points_per_frame: 10000
+  # 逐帧评价：0表示全量帧；需要快速试跑时可命令行覆盖 --frame-max-frames 20。
+  max_frames: 0
+  points_per_frame: 20000
+  worst_frame_count: 30
+
+cases:
+  - name: current_existing
+    root: output/drone_2_gld_indexed
+  - name: pgo_global_safe
+    root: output/param_sweep/drone_2_gld_indexed/pgo_global_safe
+  - name: pgo_global_safe_hba3
+    root: output/param_sweep/drone_2_gld_indexed/pgo_global_safe_hba3
+
